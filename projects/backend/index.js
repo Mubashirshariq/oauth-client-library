@@ -1,14 +1,15 @@
 const express = require('express');
-const OAuthClient = require('../../core/src/index.js')
+const OAuthClient = require('../../core/src/index.js');
+const cors=require("cors")
 require('dotenv').config();
 
 const app = express();
 
 app.use(express.json());
-
+app.use(cors());
 const client = new OAuthClient({
-  clientId: process.env.CLIENT_ID,
-  clientSecret: process.env.CLIENT_SECRET,
+  clientId: process.env.GOOGLE_CLIENT_ID,
+  clientSecret: process.env.GOOGLE_CLIENT_SECRET,
   redirectUri: 'http://localhost:3000/callback',
   userInfoEndpoint: 'https://openidconnect.googleapis.com/v1/userinfo',
   provider: "google"
@@ -18,7 +19,9 @@ const client = new OAuthClient({
 app.get('/login', (req, res) => {
   const authUrl = client.startAuthFlow(['profile', 'email'], 'randomState');
   console.log(authUrl)
-  res.redirect(authUrl);
+  res.json({message:"succesfull login",
+    authUrl
+  });
 });
 
 app.get('/callback', async (req, res) => {

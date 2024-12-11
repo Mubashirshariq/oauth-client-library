@@ -75,6 +75,28 @@ class OAuthClient {
         return tokens;
     }
 
+    async getUserInfo(accessToken) {
+        const userInfoUri = "https://openidconnect.googleapis.com/v1/userinfo";
+        try {
+            const response = await fetch(userInfoUri, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            });
+            if (!response.ok) {
+                throw new Error(`Error fetching user info: ${response.status} - ${response.statusText}`);
+            }
+            const userInfo = await response.json();
+            return {
+                provider: this.provider,
+                ...userInfo, // Include all user info fields
+            };
+        } catch (error) {
+            console.error("Error in getUserInfo:", error);
+            throw error;
+        }
+    }
+
     getSavedTokens() {
         return this.environment.getToken('tokens');
     }
