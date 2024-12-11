@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OAuth Login</title>
+    <style>
+      /* Resetting default margin and padding */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+        background: linear-gradient(to bottom, #6a11cb, #2575fc);
+        color: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+      }
+
+      h1 {
+        margin-bottom: 20px;
+        font-size: 2rem;
+      }
+
+      #loginButton {
+        background-color: #ffffff;
+        color: #2575fc;
+        border: none;
+        padding: 15px 30px;
+        border-radius: 5px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      #loginButton:hover {
+        background-color: #e0e0e0;
+      }
+
+      #userInfo {
+        margin-top: 20px;
+        padding: 10px;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 5px;
+        font-size: 1.2rem;
+        text-align: center;
+        min-width: 300px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>OAuth Login Demo</h1>
+    <button id="loginButton">Login with OAuth</button>
+    <div id="userInfo"></div>
+
+    <script>
+      document.getElementById("loginButton").addEventListener("click", () => {
+        window.location.href = "/login";
+      });
+
+      async function fetchUserInfo() {
+        const response = await fetch("/callback");
+        if (response.ok) {
+          const data = await response.json();
+          document.getElementById(
+            "userInfo"
+          ).innerText = `Hello, ${data.user.name}`;
+        } else {
+          document.getElementById("userInfo").innerText = "Login failed!";
+        }
+      }
+
+      fetchUserInfo();
+    </script>
+  </body>
+</html>
